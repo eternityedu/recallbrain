@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,26 +7,54 @@ import { Textarea } from "@/components/ui/textarea";
 import { Brain, ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useBrandProfiles } from "@/hooks/useBrandProfiles";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function BrandSetup() {
   const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
+  const { createBrand } = useBrandProfiles();
   const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     brandName: "", description: "", websiteUrl: "", category: "", targetAudience: "", keywords: "", valueProposition: "", trustSignals: ""
   });
 
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/auth");
+    }
+  }, [user, authLoading, navigate]);
+
   const updateField = (field: string, value: string) => setFormData(prev => ({ ...prev, [field]: value }));
 
-  const handleSubmit = () => {
-    toast.success("Brand profile created! Generating AI optimization...");
-    setTimeout(() => navigate("/dashboard"), 1500);
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      await createBrand({
+        brand_name: formData.brandName,
+        description: formData.description,
+        website_url: formData.websiteUrl,
+        category: formData.category,
+        target_audience: formData.targetAudience,
+        keywords: formData.keywords,
+        value_proposition: formData.valueProposition,
+        trust_signals: formData.trustSignals,
+      });
+      toast.success("Brand profile created! Redirecting to dashboard...");
+      setTimeout(() => navigate("/dashboard"), 1000);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to create brand profile");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-glass-border bg-background/80 backdrop-blur-xl sticky top-0 z-50">
         <div className="container mx-auto px-4 h-16 flex items-center gap-4">
-          <button onClick={() => navigate(-1)} className="text-muted-foreground hover:text-foreground transition-colors">
+          <button onClick={() => navigate("/dashboard")} className="text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div className="flex items-center gap-2">
@@ -103,8 +131,13 @@ export default function BrandSetup() {
                   Continue <ArrowRight className="h-4 w-4" />
                 </Button>
               ) : (
-                <Button variant="glow" onClick={handleSubmit} disabled={!formData.targetAudience || !formData.valueProposition}>
-                  <Check className="h-4 w-4" /> Create Profile
+                <Button variant="glow" onClick={handleSubmit} disabled={loading || !formData.targetAudience || !formData.valueProposition}>
+                  {loading ? (
+                    <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <Check className="h-4 w-4" />
+                  )}
+                  Create Profile
                 </Button>
               )}
             </div>

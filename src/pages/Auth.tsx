@@ -39,7 +39,10 @@ export default function Auth() {
 
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
+        // Check if this is the first user (will be admin)
+        const { data: isFirst } = await supabase.rpc('is_first_user');
+        
+        const { data: authData, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -47,15 +50,40 @@ export default function Auth() {
             data: { full_name: name }
           }
         });
+        
         if (error) throw error;
-        toast.success("Account created! Welcome to Recall.");
+        
+        if (authData.user) {
+          // Create profile
+          await supabase.from('profiles').insert({
+            user_id: authData.user.id,
+            email: email,
+            full_name: name,
+          });
+
+          // Create user role (admin if first user, otherwise regular user)
+          await supabase.from('user_roles').insert({
+            user_id: authData.user.id,
+            role: isFirst ? 'admin' : 'user',
+          });
+
+          if (isFirst) {
+            toast.success("Welcome! You are the admin of Recall.");
+          } else {
+            toast.success("Account created! Welcome to Recall.");
+          }
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success("Welcome back!");
       }
     } catch (error: any) {
-      toast.error(error.message || "Authentication failed");
+      if (error.message?.includes('User already registered')) {
+        toast.error("This email is already registered. Please sign in.");
+      } else {
+        toast.error(error.message || "Authentication failed");
+      }
     } finally {
       setLoading(false);
     }

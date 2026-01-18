@@ -14,16 +14,200 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      brand_profiles: {
+        Row: {
+          ai_example_snippets: string | null
+          ai_recommendation_triggers: string | null
+          ai_summary: string | null
+          authority_score: number | null
+          brand_name: string
+          category: string | null
+          clarity_score: number | null
+          created_at: string
+          description: string | null
+          id: string
+          is_optimized: boolean | null
+          keywords: string | null
+          recall_score: number | null
+          relevance_score: number | null
+          target_audience: string | null
+          trust_signals: string | null
+          updated_at: string
+          user_id: string
+          value_proposition: string | null
+          website_url: string | null
+        }
+        Insert: {
+          ai_example_snippets?: string | null
+          ai_recommendation_triggers?: string | null
+          ai_summary?: string | null
+          authority_score?: number | null
+          brand_name: string
+          category?: string | null
+          clarity_score?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_optimized?: boolean | null
+          keywords?: string | null
+          recall_score?: number | null
+          relevance_score?: number | null
+          target_audience?: string | null
+          trust_signals?: string | null
+          updated_at?: string
+          user_id: string
+          value_proposition?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          ai_example_snippets?: string | null
+          ai_recommendation_triggers?: string | null
+          ai_summary?: string | null
+          authority_score?: number | null
+          brand_name?: string
+          category?: string | null
+          clarity_score?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_optimized?: boolean | null
+          keywords?: string | null
+          recall_score?: number | null
+          relevance_score?: number | null
+          target_audience?: string | null
+          trust_signals?: string | null
+          updated_at?: string
+          user_id?: string
+          value_proposition?: string | null
+          website_url?: string | null
+        }
+        Relationships: []
+      }
+      chat_messages: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean | null
+          message: string
+          receiver_id: string | null
+          sender_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          message: string
+          receiver_id?: string | null
+          sender_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          receiver_id?: string | null
+          sender_id?: string
+        }
+        Relationships: []
+      }
+      pricing: {
+        Row: {
+          created_at: string
+          features: string[] | null
+          id: string
+          is_active: boolean | null
+          plan_name: string
+          price: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          features?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          plan_name: string
+          price: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          features?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          plan_name?: string
+          price?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_admin_user_id: { Args: never; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_first_user: { Args: never; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +334,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
