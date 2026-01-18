@@ -1,1 +1,7 @@
 project_id = "urhqliqbmeosnvalcius"
+
+[functions.optimize-brand]
+verify_jwt = false
+
+[functions.ai-simulator]
+verify_jwt = false
