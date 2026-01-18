@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
+import { useAnalytics } from "./useAnalytics";
 import { toast } from "sonner";
 
 export interface BrandProfile {
@@ -28,6 +29,7 @@ export interface BrandProfile {
 
 export function useBrandProfiles() {
   const { user } = useAuth();
+  const { trackOptimization } = useAnalytics();
   const [brands, setBrands] = useState<BrandProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedBrand, setSelectedBrand] = useState<BrandProfile | null>(null);
@@ -152,6 +154,14 @@ export function useBrandProfiles() {
       clarity_score: optimization.scores.clarity,
       authority_score: optimization.scores.authority,
       is_optimized: true,
+    });
+
+    // Track optimization analytics
+    trackOptimization(brand.id, {
+      clarity: optimization.scores.clarity,
+      relevance: optimization.scores.relevance,
+      authority: optimization.scores.authority,
+      overall: optimization.recallScore
     });
 
     return updated;

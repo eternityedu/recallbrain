@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,6 +6,7 @@ import { Brain, Send, ArrowLeft, Sparkles, CheckCircle, AlertCircle } from "luci
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useBrandProfiles } from "@/hooks/useBrandProfiles";
+import { useAnalytics } from "@/hooks/useAnalytics";
 import { toast } from "sonner";
 
 interface SimulatorResponse {
@@ -18,6 +19,7 @@ interface SimulatorResponse {
 export default function Simulator() {
   const navigate = useNavigate();
   const { brands, selectedBrand, setSelectedBrand } = useBrandProfiles();
+  const { trackSimulation } = useAnalytics();
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<SimulatorResponse | null>(null);
@@ -48,6 +50,16 @@ export default function Simulator() {
       }
 
       setResponse(data.result);
+      
+      // Track simulation analytics
+      if (selectedBrand) {
+        trackSimulation(
+          selectedBrand.id,
+          query,
+          data.result.brandRecommended,
+          data.result.confidenceScore
+        );
+      }
     } catch (error: any) {
       toast.error(error.message || "Failed to simulate AI response");
     } finally {

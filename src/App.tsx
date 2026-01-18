@@ -11,6 +11,7 @@ import Simulator from "./pages/Simulator";
 import BrandSetup from "./pages/BrandSetup";
 import Admin from "./pages/Admin";
 import Chat from "./pages/Chat";
+import Analytics from "./pages/Analytics";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/brand-setup" element={<BrandSetup />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/chat" element={<Chat />} />
+            <Route path="/analytics" element={<Analytics />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
