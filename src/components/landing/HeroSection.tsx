@@ -7,7 +7,7 @@ export function HeroSection() {
   const navigate = useNavigate();
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 md:pt-16 px-4">
       {/* Background Effects */}
       <div className="hero-glow" />
       <div className="absolute inset-0 bg-hero-pattern opacity-30" />
@@ -30,7 +30,7 @@ export function HeroSection() {
         className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/20 rounded-full blur-3xl"
       />
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto relative z-10 w-full">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <motion.div
@@ -48,7 +48,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="font-display text-5xl md:text-7xl font-bold mb-6 leading-tight"
+            className="font-display text-4xl sm:text-5xl md:text-7xl font-bold mb-6 leading-tight"
           >
             SEO for{" "}
             <span className="glow-text">AI</span>
@@ -59,7 +59,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-xl md:text-2xl text-muted-foreground mb-4 max-w-2xl mx-auto"
+            className="text-lg sm:text-xl md:text-2xl text-muted-foreground mb-4 max-w-2xl mx-auto px-2"
           >
             We don't place ads. We build AI memory.
           </motion.p>

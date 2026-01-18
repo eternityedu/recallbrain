@@ -7,7 +7,7 @@ export function CTASection() {
   const navigate = useNavigate();
 
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section className="py-16 md:py-24 relative overflow-hidden">
       {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/10 to-transparent" />
       <motion.div
@@ -16,7 +16,7 @@ export function CTASection() {
           opacity: [0.2, 0.3, 0.2],
         }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-primary/20 rounded-full blur-3xl"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] md:w-[600px] h-[300px] md:h-[400px] bg-primary/20 rounded-full blur-3xl"
       />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -25,18 +25,18 @@ export function CTASection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="glass-card max-w-4xl mx-auto p-12 text-center glow-border"
+          className="glass-card max-w-4xl mx-auto p-6 md:p-12 text-center glow-border"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/10 mb-6">
             <Sparkles className="h-4 w-4 text-primary" />
             <span className="text-sm text-primary font-medium">Start Free Today</span>
           </div>
 
-          <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
+          <h2 className="font-display text-2xl sm:text-3xl md:text-5xl font-bold mb-4">
             Ready to Be <span className="glow-text">Remembered</span>?
           </h2>
           
-          <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-8">
+          <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto mb-6 md:mb-8 px-2">
             Join the brands building AI memory. Get your Recall Score and start earning recommendations today.
           </p>
 
