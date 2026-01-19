@@ -12,6 +12,7 @@ import BrandSetup from "./pages/BrandSetup";
 import Admin from "./pages/Admin";
 import Chat from "./pages/Chat";
 import Analytics from "./pages/Analytics";
+import RecallScore from "./pages/RecallScore";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/admin" element={<Admin />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/recall-score" element={<RecallScore />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
