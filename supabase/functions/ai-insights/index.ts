@@ -18,21 +18,46 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    console.log("Generating AI insights for analytics data");
+    console.log("Recall AI generating insights for analytics data");
 
-    const systemPrompt = `You are an AI visibility optimization expert. Your task is to analyze brand optimization analytics data and provide actionable insights to improve brand visibility in AI-generated recommendations.
+    const systemPrompt = `You are Recall AI's Analytics Intelligence Engine.
 
-Focus on:
-1. Identifying patterns in the data
-2. Suggesting specific improvements based on scores
-3. Providing actionable next steps
-4. Highlighting wins and areas of concern`;
+CORE IDENTITY:
+- You analyze brand AI-readiness data and provide actionable insights
+- Your mission is to help brands become more understandable to AI systems
+- You focus on semantic clarity, intent alignment, authority signals, and consistency
+- All insights are designed to improve AI-readiness, not guarantee external AI visibility
+
+RECALL PHILOSOPHY:
+- Recall is "SEO for AI"
+- Traditional SEO optimizes for links; Recall optimizes for AI understanding
+- AI chooses the most contextually correct, clearly defined, and trusted answer
+- We build understanding, not promotion
+
+YOUR TASK:
+Analyze the provided analytics and brand data to:
+1. Identify patterns in AI-readiness performance
+2. Highlight strengths and areas for improvement
+3. Provide specific, actionable recommendations
+4. Calculate an overall AI Visibility Health Score
+
+TONE: 
+- Intelligent, calm, trustworthy
+- Clear and educational
+- Non-salesy, focused on genuine improvements
+- Think like "A technical AI researcher explaining to founders"
+
+STRICT RULES:
+- Never promise external AI visibility
+- Never claim to control AI platform behavior
+- Focus on optimization and readiness
+- Use phrases like "may increase likelihood", "designed to improve", "AI-readiness optimization"`;
 
     const analyticsContext = `
 Analytics Overview:
-- Total Optimizations: ${analyticsData.optimizations}
-- Simulations Run: ${analyticsData.simulations}
-- Success Rate (Brand Recommended): ${analyticsData.successRate}%
+- Total Optimizations Performed: ${analyticsData.optimizations}
+- Simulations Executed: ${analyticsData.simulations}
+- Contextual Match Rate: ${analyticsData.successRate}%
 - Average Confidence Score: ${analyticsData.avgConfidence}%
 
 Score Distribution:
@@ -44,14 +69,26 @@ Current Brand Profile:
 - Name: ${brandData.brandName}
 - Category: ${brandData.category || 'Not specified'}
 - Is Optimized: ${brandData.isOptimized ? 'Yes' : 'No'}
-- Recall Score: ${brandData.recallScore || 'Not calculated'}
+- Recall Score (AI Readiness): ${brandData.recallScore || 'Not calculated'}
+- Relevance Score: ${brandData.relevance_score || 'N/A'}
+- Clarity Score: ${brandData.clarity_score || 'N/A'}
+- Authority Score: ${brandData.authority_score || 'N/A'}
 ` : 'No brand profile selected.';
 
-    const userPrompt = `${analyticsContext}
+    const userPrompt = `ANALYSIS REQUEST:
+
+${analyticsContext}
 
 ${brandContext}
 
-Based on this data, provide insights and recommendations to improve AI visibility and recommendation rates.`;
+Based on this data, provide Recall AI insights and recommendations to improve:
+1. Semantic clarity - How clearly defined is the brand?
+2. Intent alignment - Does it match user queries?
+3. Authority signals - Are trust indicators present?
+4. Consistency - Is messaging unified?
+5. Explainability - Can AI easily explain why to recommend?
+
+Focus on actionable improvements that will increase AI-readiness.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -69,52 +106,65 @@ Based on this data, provide insights and recommendations to improve AI visibilit
           {
             type: "function",
             function: {
-              name: "generate_insights",
-              description: "Generate structured AI visibility insights",
+              name: "generate_recall_insights",
+              description: "Generate structured Recall AI visibility insights",
               parameters: {
                 type: "object",
                 properties: {
                   summary: {
                     type: "string",
-                    description: "A brief 1-2 sentence summary of the overall performance"
+                    description: "A brief 1-2 sentence summary of the overall AI-readiness performance"
                   },
                   strengths: {
                     type: "array",
                     items: { type: "string" },
-                    description: "List of 2-3 current strengths based on the data"
+                    description: "List of 2-3 current strengths in AI-readiness based on the data"
                   },
                   improvements: {
                     type: "array",
                     items: {
                       type: "object",
                       properties: {
-                        area: { type: "string" },
+                        area: { type: "string", description: "One of: Semantic Clarity, Intent Alignment, Authority Signals, Consistency, Explainability" },
                         suggestion: { type: "string" },
-                        priority: { type: "string", enum: ["high", "medium", "low"] }
+                        priority: { type: "string", enum: ["high", "medium", "low"] },
+                        impact: { type: "string", description: "Expected impact on AI-readiness" }
                       },
-                      required: ["area", "suggestion", "priority"]
+                      required: ["area", "suggestion", "priority", "impact"]
                     },
-                    description: "List of 3-4 specific improvement suggestions"
+                    description: "List of 3-5 specific improvement suggestions to increase AI-readiness"
                   },
                   nextSteps: {
                     type: "array",
                     items: { type: "string" },
-                    description: "List of 2-3 immediate action items"
+                    description: "List of 3 immediate action items to improve AI visibility"
                   },
                   healthScore: {
                     type: "number",
                     minimum: 0,
                     maximum: 100,
-                    description: "Overall AI visibility health score based on the analytics"
+                    description: "Overall AI Visibility Health Score based on the analytics"
+                  },
+                  scoreBreakdown: {
+                    type: "object",
+                    properties: {
+                      semanticClarity: { type: "number", minimum: 0, maximum: 100 },
+                      intentAlignment: { type: "number", minimum: 0, maximum: 100 },
+                      authoritySignals: { type: "number", minimum: 0, maximum: 100 },
+                      consistency: { type: "number", minimum: 0, maximum: 100 },
+                      explainability: { type: "number", minimum: 0, maximum: 100 }
+                    },
+                    required: ["semanticClarity", "intentAlignment", "authoritySignals", "consistency", "explainability"],
+                    description: "Breakdown of Recall Score components"
                   }
                 },
-                required: ["summary", "strengths", "improvements", "nextSteps", "healthScore"],
+                required: ["summary", "strengths", "improvements", "nextSteps", "healthScore", "scoreBreakdown"],
                 additionalProperties: false
               }
             }
           }
         ],
-        tool_choice: { type: "function", function: { name: "generate_insights" } }
+        tool_choice: { type: "function", function: { name: "generate_recall_insights" } }
       }),
     });
 
@@ -137,10 +187,10 @@ Based on this data, provide insights and recommendations to improve AI visibilit
     }
 
     const data = await response.json();
-    console.log("AI Insights response received");
+    console.log("Recall AI Insights response received");
     
     const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
-    if (!toolCall || toolCall.function.name !== "generate_insights") {
+    if (!toolCall || toolCall.function.name !== "generate_recall_insights") {
       throw new Error("Unexpected AI response format");
     }
 
@@ -154,7 +204,7 @@ Based on this data, provide insights and recommendations to improve AI visibilit
     });
 
   } catch (error) {
-    console.error("AI Insights error:", error);
+    console.error("Recall AI Insights error:", error);
     return new Response(JSON.stringify({ 
       error: error instanceof Error ? error.message : "Unknown error" 
     }), {

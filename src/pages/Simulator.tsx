@@ -14,6 +14,8 @@ interface SimulatorResponse {
   brandRecommended: boolean;
   relevanceExplanation: string;
   confidenceScore: number;
+  intentMatch?: string;
+  improvementTips?: string[];
 }
 
 export default function Simulator() {
@@ -92,7 +94,10 @@ export default function Simulator() {
               AI Recommendation <span className="glow-text">Simulator</span>
             </h1>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              Ask a question like a user would ask an AI assistant. See how your brand gets recommended.
+              Test how AI systems might recommend your brand. This is an AI-readiness simulation to understand contextual relevance.
+            </p>
+            <p className="text-xs text-muted-foreground/60 mt-2">
+              Note: This is a simulation, not a guarantee of external AI behavior.
             </p>
           </div>
 
@@ -158,16 +163,21 @@ export default function Simulator() {
           {/* Response */}
           {response && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+              {/* Simulated AI Response */}
               <div className="glass-card p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <Sparkles className="h-5 w-5 text-primary" />
-                  <h3 className="font-display font-semibold">AI Response</h3>
+                  <h3 className="font-display font-semibold">Simulated AI Response</h3>
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                    AI-Style Simulation
+                  </span>
                 </div>
                 <div className="p-4 rounded-xl bg-muted/30 border border-glass-border">
                   <p className="text-foreground leading-relaxed whitespace-pre-wrap">{response.answer}</p>
                 </div>
               </div>
 
+              {/* Recommendation Status */}
               <div className={`glass-card p-6 ${response.brandRecommended ? 'glow-border' : ''}`}>
                 <div className="flex items-center gap-2 mb-4">
                   {response.brandRecommended ? (
@@ -176,12 +186,12 @@ export default function Simulator() {
                     <AlertCircle className="h-5 w-5 text-yellow-500" />
                   )}
                   <h3 className="font-display font-semibold">
-                    {response.brandRecommended ? 'Brand Was Recommended!' : 'Brand Not Recommended'}
+                    {response.brandRecommended ? 'Brand Was Contextually Matched!' : 'Brand Not Contextually Relevant'}
                   </h3>
                 </div>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-xs text-muted-foreground mb-1">Confidence Score</p>
+                    <p className="text-xs text-muted-foreground mb-1">Contextual Confidence</p>
                     <div className="flex items-center gap-2">
                       <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                         <div 
@@ -197,11 +207,40 @@ export default function Simulator() {
                     <p className="font-semibold text-primary">{selectedBrand?.brand_name || 'None'}</p>
                   </div>
                 </div>
+                
+                {/* Intent Match */}
+                {response.intentMatch && (
+                  <div className="mt-4 p-3 rounded-lg bg-muted/20 border border-glass-border">
+                    <p className="text-xs text-muted-foreground mb-1">Intent Analysis</p>
+                    <p className="text-sm text-foreground">{response.intentMatch}</p>
+                  </div>
+                )}
+                
                 <div className="mt-4">
-                  <p className="text-xs text-muted-foreground mb-1">Explanation</p>
+                  <p className="text-xs text-muted-foreground mb-1">Relevance Explanation</p>
                   <p className="text-sm text-muted-foreground">{response.relevanceExplanation}</p>
                 </div>
               </div>
+
+              {/* Improvement Tips */}
+              {response.improvementTips && response.improvementTips.length > 0 && (
+                <div className="glass-card p-6">
+                  <h3 className="font-display font-semibold mb-4">AI-Readiness Improvement Tips</h3>
+                  <ul className="space-y-2">
+                    {response.improvementTips.map((tip, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center mt-0.5">
+                          {index + 1}
+                        </span>
+                        <span className="text-sm text-muted-foreground">{tip}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="text-xs text-muted-foreground/60 mt-4">
+                    These suggestions may increase the likelihood of contextually correct AI recommendations.
+                  </p>
+                </div>
+              )}
             </motion.div>
           )}
         </motion.div>

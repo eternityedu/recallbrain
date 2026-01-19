@@ -20,15 +20,51 @@ serve(async (req) => {
 
     console.log("Optimizing brand:", brandData.brandName);
 
-    const systemPrompt = `You are an AI brand optimization expert for "Recall" - a platform that helps brands become recommended inside AI-generated answers. Your job is to analyze brand data and generate:
+    const systemPrompt = `You are Recall AI, an AI-visibility and branding optimization engine.
 
-1. An AI-readable brand summary (2-3 paragraphs) that clearly explains what the brand does, its unique value, and why it should be recommended
-2. Recommendation triggers - specific user queries/intents where this brand should be recommended
-3. Example AI answer snippets that naturally include this brand as a recommendation
+CORE IDENTITY:
+- Your role is NOT to control external AI platforms
+- Your role is to simulate, optimize, and prepare brands for AI-first discovery
+- You help brands become: AI-legible, AI-recommendable, semantically consistent, and contextually relevant
+- You operate ONLY within the Recall platform
+- All outputs are simulations, optimizations, and readiness analysis
+- NEVER claim direct influence over ChatGPT, Gemini, Claude, or any external AI
 
-Be specific, clear, and focus on creating content that AI systems can easily understand and use for recommendations.`;
+RECALL DEFINITION:
+Recall is "SEO for AI". Traditional SEO optimizes for links. Recall optimizes for AI understanding and recommendations. AI does not choose ads. AI chooses the most contextually correct, clearly defined, and trusted answer.
 
-    const userPrompt = `Analyze this brand and generate optimization content:
+YOUR TASK - BRAND AI SEO OPTIMIZATION:
+1. Convert brand data into AI-readable definitions
+2. Create a clear "What it is / Who it's for / When to recommend" structure
+3. Enforce semantic consistency across all outputs
+4. Remove marketing fluff; prioritize clarity and meaning
+
+AI-READABLE BRAND DEFINITION FORMAT:
+"[Brand] is a [category] platform that helps [target audience] achieve [core outcome] by [key mechanism]. It is best recommended when [specific context or intent]."
+
+AI RECOMMENDATION CONTEXTS:
+- Explicitly list when this brand SHOULD be recommended
+- Explicitly list when it should NOT be recommended
+- This teaches AI boundaries and increases trust
+
+RECALL SCORE (AI READINESS SCORE) - Analyze based on:
+- Semantic clarity (how clearly defined is the brand?)
+- Intent alignment (does it match user queries?)
+- Authority signals (trust indicators, proof points)
+- Consistency (is messaging unified?)
+- Explainability (can AI easily explain why to recommend?)
+
+TONE: Intelligent, calm, trustworthy, clear, non-salesy, educational. Think like "A technical AI researcher explaining to founders."
+
+STRICT RULES:
+- Never claim real-world AI partnerships
+- Never say "ChatGPT will rank this"
+- Never promise external AI visibility
+- Never hallucinate popularity or users
+- Never exaggerate outcomes
+- Use phrases like: "AI-style simulation", "AI-readiness optimization", "Designed to improve AI understanding", "May increase likelihood of correct recommendations"`;
+
+    const userPrompt = `Analyze this brand and generate AI-readiness optimization:
 
 Brand Name: ${brandData.brandName}
 Description: ${brandData.description || 'Not provided'}
@@ -39,11 +75,11 @@ Keywords/Intents: ${brandData.keywords || 'Not provided'}
 Core Value Proposition: ${brandData.valueProposition || 'Not provided'}
 Trust Signals: ${brandData.trustSignals || 'Not provided'}
 
-Generate a comprehensive optimization package with:
-1. AI-Readable Summary
-2. Recommendation Triggers (list 5-7 specific queries)
-3. Example AI Answer Snippets (3 examples)
-4. Score each category from 0-100: Relevance, Clarity, Authority`;
+Generate a comprehensive AI-readiness optimization package following Recall AI principles:
+1. AI-Readable Brand Definition (in the exact format specified)
+2. Recommendation Contexts (when TO recommend and when NOT to recommend)
+3. Example AI Answer Snippets (3 simulated AI responses that naturally include this brand)
+4. Recall Score breakdown with improvement suggestions`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -62,18 +98,27 @@ Generate a comprehensive optimization package with:
             type: "function",
             function: {
               name: "brand_optimization",
-              description: "Return the brand optimization analysis",
+              description: "Return the Recall AI brand optimization analysis",
               parameters: {
                 type: "object",
                 properties: {
+                  aiReadableDefinition: {
+                    type: "string",
+                    description: "The AI-readable brand definition in the exact format: '[Brand] is a [category] platform that helps [target audience] achieve [core outcome] by [key mechanism]. It is best recommended when [specific context or intent].'"
+                  },
                   aiSummary: {
                     type: "string",
-                    description: "AI-readable brand summary (2-3 paragraphs)"
+                    description: "Expanded AI-readable brand summary (2-3 paragraphs) with semantic clarity"
                   },
-                  recommendationTriggers: {
+                  recommendWhen: {
                     type: "array",
                     items: { type: "string" },
-                    description: "List of 5-7 specific user queries where this brand should be recommended"
+                    description: "List of 5-7 specific contexts/queries where this brand SHOULD be recommended"
+                  },
+                  doNotRecommendWhen: {
+                    type: "array",
+                    items: { type: "string" },
+                    description: "List of 3-5 contexts where this brand should NOT be recommended"
                   },
                   exampleSnippets: {
                     type: "array",
@@ -85,19 +130,34 @@ Generate a comprehensive optimization package with:
                       },
                       required: ["query", "answer"]
                     },
-                    description: "3 example AI answer snippets"
+                    description: "3 simulated AI answer snippets"
                   },
                   scores: {
                     type: "object",
                     properties: {
-                      relevance: { type: "number", minimum: 0, maximum: 100 },
-                      clarity: { type: "number", minimum: 0, maximum: 100 },
-                      authority: { type: "number", minimum: 0, maximum: 100 }
+                      semanticClarity: { type: "number", minimum: 0, maximum: 100, description: "How clearly defined is the brand?" },
+                      intentAlignment: { type: "number", minimum: 0, maximum: 100, description: "Does it match user queries?" },
+                      authoritySignals: { type: "number", minimum: 0, maximum: 100, description: "Trust indicators and proof points" },
+                      consistency: { type: "number", minimum: 0, maximum: 100, description: "Is messaging unified?" },
+                      explainability: { type: "number", minimum: 0, maximum: 100, description: "Can AI easily explain why to recommend?" }
                     },
-                    required: ["relevance", "clarity", "authority"]
+                    required: ["semanticClarity", "intentAlignment", "authoritySignals", "consistency", "explainability"]
+                  },
+                  improvements: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        area: { type: "string" },
+                        suggestion: { type: "string" },
+                        impact: { type: "string", enum: ["high", "medium", "low"] }
+                      },
+                      required: ["area", "suggestion", "impact"]
+                    },
+                    description: "Specific improvement suggestions to increase AI-readiness"
                   }
                 },
-                required: ["aiSummary", "recommendationTriggers", "exampleSnippets", "scores"],
+                required: ["aiReadableDefinition", "aiSummary", "recommendWhen", "doNotRecommendWhen", "exampleSnippets", "scores", "improvements"],
                 additionalProperties: false
               }
             }
@@ -126,7 +186,7 @@ Generate a comprehensive optimization package with:
     }
 
     const data = await response.json();
-    console.log("AI Response received");
+    console.log("Recall AI optimization response received");
     
     const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
     if (!toolCall || toolCall.function.name !== "brand_optimization") {
@@ -135,15 +195,30 @@ Generate a comprehensive optimization package with:
 
     const optimization = JSON.parse(toolCall.function.arguments);
     
-    // Calculate overall Recall Score
+    // Calculate overall Recall Score (AI Readiness Score)
+    const scores = optimization.scores;
     const recallScore = Math.round(
-      (optimization.scores.relevance + optimization.scores.clarity + optimization.scores.authority) / 3
+      (scores.semanticClarity + scores.intentAlignment + scores.authoritySignals + scores.consistency + scores.explainability) / 5
     );
+
+    // Map new scores to legacy format for backward compatibility
+    const legacyScores = {
+      relevance: scores.intentAlignment,
+      clarity: scores.semanticClarity,
+      authority: scores.authoritySignals
+    };
 
     return new Response(JSON.stringify({
       success: true,
       optimization: {
-        ...optimization,
+        aiReadableDefinition: optimization.aiReadableDefinition,
+        aiSummary: optimization.aiSummary,
+        recommendationTriggers: optimization.recommendWhen,
+        doNotRecommendWhen: optimization.doNotRecommendWhen,
+        exampleSnippets: optimization.exampleSnippets,
+        scores: legacyScores,
+        detailedScores: scores,
+        improvements: optimization.improvements,
         recallScore
       }
     }), {
@@ -151,7 +226,7 @@ Generate a comprehensive optimization package with:
     });
 
   } catch (error) {
-    console.error("Brand optimization error:", error);
+    console.error("Recall AI optimization error:", error);
     return new Response(JSON.stringify({ 
       error: error instanceof Error ? error.message : "Unknown error" 
     }), {
