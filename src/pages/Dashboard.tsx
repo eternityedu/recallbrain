@@ -154,25 +154,30 @@ export default function Dashboard() {
 
                 {/* Score Breakdown */}
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="glass-card p-6">
-                  <h3 className="font-display font-semibold mb-4">Score Breakdown</h3>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-display font-semibold">Score Breakdown</h3>
+                    <Button variant="ghost" size="sm" onClick={() => navigate("/recall-score")} className="text-xs text-primary">
+                      View Details
+                    </Button>
+                  </div>
                   <div className="space-y-3">
                     <div>
                       <div className="flex justify-between text-sm mb-1">
-                        <span className="text-muted-foreground">Relevance</span>
+                        <span className="text-muted-foreground">Intent Alignment</span>
                         <span>{selectedBrand.relevance_score}%</span>
                       </div>
                       <Progress value={selectedBrand.relevance_score} className="h-2" />
                     </div>
                     <div>
                       <div className="flex justify-between text-sm mb-1">
-                        <span className="text-muted-foreground">Clarity</span>
+                        <span className="text-muted-foreground">Semantic Clarity</span>
                         <span>{selectedBrand.clarity_score}%</span>
                       </div>
                       <Progress value={selectedBrand.clarity_score} className="h-2" />
                     </div>
                     <div>
                       <div className="flex justify-between text-sm mb-1">
-                        <span className="text-muted-foreground">Authority</span>
+                        <span className="text-muted-foreground">Authority Signals</span>
                         <span>{selectedBrand.authority_score}%</span>
                       </div>
                       <Progress value={selectedBrand.authority_score} className="h-2" />
