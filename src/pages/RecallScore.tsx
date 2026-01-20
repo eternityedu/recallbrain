@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Brain, ArrowLeft, Target, Lightbulb, Shield, RefreshCw, MessageSquare, TrendingUp, Info } from "lucide-react";
+import { Brain, ArrowLeft, Target, Lightbulb, Shield, RefreshCw, MessageSquare, TrendingUp, Info, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useBrandProfiles } from "@/hooks/useBrandProfiles";
+import { useScoreHistory } from "@/hooks/useScoreHistory";
 import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { ScoreHistoryChart } from "@/components/charts/ScoreHistoryChart";
 
 interface ScoreComponent {
   name: string;
@@ -82,6 +84,7 @@ const scoreComponents: ScoreComponent[] = [
 export default function RecallScore() {
   const navigate = useNavigate();
   const { brands, selectedBrand, setSelectedBrand, optimizeBrand, loading } = useBrandProfiles();
+  const { history, loading: historyLoading } = useScoreHistory(selectedBrand?.id);
   const [isOptimizing, setIsOptimizing] = useState(false);
 
   // Calculate scores from selected brand or use defaults
@@ -320,6 +323,35 @@ export default function RecallScore() {
                 })}
               </div>
 
+              {/* Score History Chart */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="glass-card p-6"
+              >
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-purple-500/20 flex items-center justify-center">
+                    <History className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-display font-semibold">Optimization History</h3>
+                    <p className="text-xs text-muted-foreground">Track how your scores improve over time</p>
+                  </div>
+                </div>
+                {historyLoading ? (
+                  <div className="flex items-center justify-center h-64">
+                    <div className="h-6 w-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+                  </div>
+                ) : (
+                  <ScoreHistoryChart history={history} />
+                )}
+                {history.length > 0 && (
+                  <p className="text-xs text-muted-foreground text-center mt-4">
+                    {history.length} optimization{history.length !== 1 ? 's' : ''} recorded
+                  </p>
+                )}
+              </motion.div>
               {/* Tips Section */}
               <div className="glass-card p-6">
                 <h3 className="font-display font-semibold mb-4">How to Improve Your Recall Score</h3>

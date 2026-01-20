@@ -3,7 +3,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 import { useAnalytics } from "./useAnalytics";
 import { toast } from "sonner";
-
 export interface BrandProfile {
   id: string;
   user_id: string;
@@ -165,6 +164,20 @@ export function useBrandProfiles() {
       explainability_score: optimization.detailedScores.explainability,
       is_optimized: true,
     });
+
+    // Save score history entry
+    if (user) {
+      await supabase.from('brand_score_history').insert({
+        brand_id: brand.id,
+        user_id: user.id,
+        recall_score: optimization.recallScore,
+        semantic_clarity_score: optimization.detailedScores.semanticClarity,
+        intent_alignment_score: optimization.detailedScores.intentAlignment,
+        authority_score: optimization.scores.authority,
+        consistency_score: optimization.detailedScores.consistency,
+        explainability_score: optimization.detailedScores.explainability,
+      });
+    }
 
     // Track optimization analytics
     trackOptimization(brand.id, {

@@ -130,6 +130,53 @@ export type Database = {
         }
         Relationships: []
       }
+      brand_score_history: {
+        Row: {
+          authority_score: number | null
+          brand_id: string
+          consistency_score: number | null
+          created_at: string
+          explainability_score: number | null
+          id: string
+          intent_alignment_score: number | null
+          recall_score: number | null
+          semantic_clarity_score: number | null
+          user_id: string
+        }
+        Insert: {
+          authority_score?: number | null
+          brand_id: string
+          consistency_score?: number | null
+          created_at?: string
+          explainability_score?: number | null
+          id?: string
+          intent_alignment_score?: number | null
+          recall_score?: number | null
+          semantic_clarity_score?: number | null
+          user_id: string
+        }
+        Update: {
+          authority_score?: number | null
+          brand_id?: string
+          consistency_score?: number | null
+          created_at?: string
+          explainability_score?: number | null
+          id?: string
+          intent_alignment_score?: number | null
+          recall_score?: number | null
+          semantic_clarity_score?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brand_score_history_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brand_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chat_messages: {
         Row: {
           created_at: string
