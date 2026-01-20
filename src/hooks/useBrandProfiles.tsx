@@ -22,6 +22,11 @@ export interface BrandProfile {
   relevance_score: number;
   clarity_score: number;
   authority_score: number;
+  // New detailed score components
+  semantic_clarity_score: number;
+  intent_alignment_score: number;
+  consistency_score: number;
+  explainability_score: number;
   is_optimized: boolean;
   created_at: string;
   updated_at: string;
@@ -144,7 +149,7 @@ export function useBrandProfiles() {
     
     const { optimization } = response.data;
     
-    // Update brand with optimization results
+    // Update brand with optimization results (including new detailed scores)
     const updated = await updateBrand(brand.id, {
       ai_summary: optimization.aiSummary,
       ai_recommendation_triggers: JSON.stringify(optimization.recommendationTriggers),
@@ -153,6 +158,11 @@ export function useBrandProfiles() {
       relevance_score: optimization.scores.relevance,
       clarity_score: optimization.scores.clarity,
       authority_score: optimization.scores.authority,
+      // Save new detailed score components
+      semantic_clarity_score: optimization.detailedScores.semanticClarity,
+      intent_alignment_score: optimization.detailedScores.intentAlignment,
+      consistency_score: optimization.detailedScores.consistency,
+      explainability_score: optimization.detailedScores.explainability,
       is_optimized: true,
     });
 

@@ -58,13 +58,17 @@ export type Database = {
           brand_name: string
           category: string | null
           clarity_score: number | null
+          consistency_score: number | null
           created_at: string
           description: string | null
+          explainability_score: number | null
           id: string
+          intent_alignment_score: number | null
           is_optimized: boolean | null
           keywords: string | null
           recall_score: number | null
           relevance_score: number | null
+          semantic_clarity_score: number | null
           target_audience: string | null
           trust_signals: string | null
           updated_at: string
@@ -80,13 +84,17 @@ export type Database = {
           brand_name: string
           category?: string | null
           clarity_score?: number | null
+          consistency_score?: number | null
           created_at?: string
           description?: string | null
+          explainability_score?: number | null
           id?: string
+          intent_alignment_score?: number | null
           is_optimized?: boolean | null
           keywords?: string | null
           recall_score?: number | null
           relevance_score?: number | null
+          semantic_clarity_score?: number | null
           target_audience?: string | null
           trust_signals?: string | null
           updated_at?: string
@@ -102,13 +110,17 @@ export type Database = {
           brand_name?: string
           category?: string | null
           clarity_score?: number | null
+          consistency_score?: number | null
           created_at?: string
           description?: string | null
+          explainability_score?: number | null
           id?: string
+          intent_alignment_score?: number | null
           is_optimized?: boolean | null
           keywords?: string | null
           recall_score?: number | null
           relevance_score?: number | null
+          semantic_clarity_score?: number | null
           target_audience?: string | null
           trust_signals?: string | null
           updated_at?: string
