@@ -9,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { exportToCSV, exportToPDF } from "@/lib/exportUtils";
+import { toast } from "sonner";
 import {
   Brain,
   Target,
@@ -16,8 +18,9 @@ import {
   RefreshCw,
   MessageSquare,
   BarChart3,
-  ArrowRight,
   CheckCircle,
+  Download,
+  FileText,
 } from "lucide-react";
 
 const scoreComponents = [
@@ -339,15 +342,41 @@ export default function BrandComparison() {
                 Compare AI-readiness scores across your brands
               </p>
             </div>
-            {selectedBrands.length >= 2 && (
-              <Button
-                variant="outline"
-                onClick={() => setSelectedIds([])}
-                className="shrink-0"
-              >
-                Clear Selection
-              </Button>
-            )}
+            <div className="flex gap-2 flex-wrap">
+              {selectedBrands.length >= 2 && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      exportToCSV(selectedBrands);
+                      toast.success("CSV exported successfully");
+                    }}
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    CSV
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      exportToPDF(selectedBrands);
+                      toast.success("PDF report generated");
+                    }}
+                  >
+                    <FileText className="h-4 w-4 mr-2" />
+                    PDF
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedIds([])}
+                  >
+                    Clear
+                  </Button>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Brand Selector */}
