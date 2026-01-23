@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { exportToCSV, exportToPDF } from "@/lib/exportUtils";
+import { ImprovementRecommendations } from "@/components/comparison/ImprovementRecommendations";
 import { toast } from "sonner";
 import {
   Brain,
@@ -61,7 +62,6 @@ const scoreComponents = [
   },
 ] as const;
 
-type ScoreKey = (typeof scoreComponents)[number]["key"];
 
 function ScoreBar({ score, color }: { score: number; color: string }) {
   return (
@@ -388,6 +388,9 @@ export default function BrandComparison() {
 
           {/* Comparison Table */}
           <ComparisonTable brands={selectedBrands} />
+
+          {/* Improvement Recommendations */}
+          <ImprovementRecommendations brands={selectedBrands} />
 
           {/* Simulation Note */}
           <p className="text-xs text-muted-foreground text-center">
