@@ -195,6 +195,7 @@ export function useBrandProfiles() {
           await checkAndNotify(
             updated as BrandProfile,
             prefs.notification_email,
+            user.id,
             previousScore,
             {
               notifyOnThreshold: prefs.notify_on_threshold,

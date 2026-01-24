@@ -1,6 +1,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -11,6 +14,8 @@ const corsHeaders = {
 interface ScoreNotificationRequest {
   email: string;
   brandName: string;
+  brandId?: string;
+  userId?: string;
   notificationType: "threshold_reached" | "significant_improvement";
   currentScore: number;
   previousScore?: number;
@@ -37,6 +42,8 @@ const handler = async (req: Request): Promise<Response> => {
     const {
       email,
       brandName,
+      brandId,
+      userId,
       notificationType,
       currentScore,
       previousScore,
@@ -201,16 +208,41 @@ const handler = async (req: Request): Promise<Response> => {
       }),
     });
 
+    const emailResult = await emailResponse.json();
+    const emailStatus = emailResponse.ok ? "sent" : "failed";
+    const errorMessage = emailResponse.ok ? null : JSON.stringify(emailResult);
+
+    // Log to notification_history if we have user context
+    if (userId && SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
+      const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+      
+      const improvement = previousScore ? currentScore - previousScore : undefined;
+      
+      await supabase.from("notification_history").insert({
+        user_id: userId,
+        brand_id: brandId || null,
+        notification_type: notificationType,
+        email_sent_to: email,
+        subject,
+        status: emailStatus,
+        error_message: errorMessage,
+        score_data: {
+          currentScore,
+          previousScore,
+          threshold,
+          improvement,
+        },
+      });
+    }
+
     if (!emailResponse.ok) {
-      const errorText = await emailResponse.text();
-      console.error("Resend API error:", errorText);
+      console.error("Resend API error:", emailResult);
       throw new Error(`Failed to send email: ${emailResponse.status}`);
     }
 
-    const result = await emailResponse.json();
-    console.log("Email sent successfully:", result);
+    console.log("Email sent successfully:", emailResult);
 
-    return new Response(JSON.stringify({ success: true, ...result }), {
+    return new Response(JSON.stringify({ success: true, ...emailResult }), {
       status: 200,
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });

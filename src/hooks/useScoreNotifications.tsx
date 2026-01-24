@@ -21,6 +21,7 @@ const defaultConfig: NotificationConfig = {
 export async function sendThresholdNotification(
   brand: BrandProfile,
   email: string,
+  userId: string,
   threshold: number = SCORE_THRESHOLD
 ) {
   if (!brand.recall_score || brand.recall_score < threshold) return;
@@ -30,6 +31,8 @@ export async function sendThresholdNotification(
       body: {
         email,
         brandName: brand.brand_name,
+        brandId: brand.id,
+        userId,
         notificationType: "threshold_reached",
         currentScore: brand.recall_score,
         threshold,
@@ -54,18 +57,22 @@ export async function sendThresholdNotification(
 export async function sendImprovementNotification(
   brand: BrandProfile,
   email: string,
-  previousScore: number
+  userId: string,
+  previousScore: number,
+  improvementThreshold: number = SIGNIFICANT_IMPROVEMENT_THRESHOLD
 ) {
   if (!brand.recall_score) return;
 
   const improvement = brand.recall_score - previousScore;
-  if (improvement < SIGNIFICANT_IMPROVEMENT_THRESHOLD) return;
+  if (improvement < improvementThreshold) return;
 
   try {
     const response = await supabase.functions.invoke("send-score-notification", {
       body: {
         email,
         brandName: brand.brand_name,
+        brandId: brand.id,
+        userId,
         notificationType: "significant_improvement",
         currentScore: brand.recall_score,
         previousScore,
@@ -90,6 +97,7 @@ export async function sendImprovementNotification(
 export async function checkAndNotify(
   brand: BrandProfile,
   email: string,
+  userId: string,
   previousScore: number | null,
   config: Partial<NotificationConfig> = {}
 ) {
@@ -104,7 +112,7 @@ export async function checkAndNotify(
     (previousScore === null || previousScore < mergedConfig.thresholdValue)
   ) {
     notifications.push(
-      sendThresholdNotification(brand, email, mergedConfig.thresholdValue)
+      sendThresholdNotification(brand, email, userId, mergedConfig.thresholdValue)
     );
   }
 
@@ -115,7 +123,9 @@ export async function checkAndNotify(
     brand.recall_score &&
     brand.recall_score - previousScore >= mergedConfig.improvementThreshold
   ) {
-    notifications.push(sendImprovementNotification(brand, email, previousScore));
+    notifications.push(
+      sendImprovementNotification(brand, email, userId, previousScore, mergedConfig.improvementThreshold)
+    );
   }
 
   if (notifications.length > 0) {

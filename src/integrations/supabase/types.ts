@@ -204,6 +204,118 @@ export type Database = {
         }
         Relationships: []
       }
+      competitors: {
+        Row: {
+          analysis_notes: string | null
+          brand_id: string | null
+          competitor_description: string | null
+          competitor_name: string
+          competitor_website: string | null
+          created_at: string
+          estimated_authority: number | null
+          estimated_consistency: number | null
+          estimated_explainability: number | null
+          estimated_intent_alignment: number | null
+          estimated_recall_score: number | null
+          estimated_semantic_clarity: number | null
+          id: string
+          last_analyzed_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          analysis_notes?: string | null
+          brand_id?: string | null
+          competitor_description?: string | null
+          competitor_name: string
+          competitor_website?: string | null
+          created_at?: string
+          estimated_authority?: number | null
+          estimated_consistency?: number | null
+          estimated_explainability?: number | null
+          estimated_intent_alignment?: number | null
+          estimated_recall_score?: number | null
+          estimated_semantic_clarity?: number | null
+          id?: string
+          last_analyzed_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          analysis_notes?: string | null
+          brand_id?: string | null
+          competitor_description?: string | null
+          competitor_name?: string
+          competitor_website?: string | null
+          created_at?: string
+          estimated_authority?: number | null
+          estimated_consistency?: number | null
+          estimated_explainability?: number | null
+          estimated_intent_alignment?: number | null
+          estimated_recall_score?: number | null
+          estimated_semantic_clarity?: number | null
+          id?: string
+          last_analyzed_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competitors_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brand_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_history: {
+        Row: {
+          brand_id: string | null
+          created_at: string
+          email_sent_to: string
+          error_message: string | null
+          id: string
+          notification_type: string
+          score_data: Json | null
+          status: string
+          subject: string
+          user_id: string
+        }
+        Insert: {
+          brand_id?: string | null
+          created_at?: string
+          email_sent_to: string
+          error_message?: string | null
+          id?: string
+          notification_type: string
+          score_data?: Json | null
+          status?: string
+          subject: string
+          user_id: string
+        }
+        Update: {
+          brand_id?: string | null
+          created_at?: string
+          email_sent_to?: string
+          error_message?: string | null
+          id?: string
+          notification_type?: string
+          score_data?: Json | null
+          status?: string
+          subject?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_history_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brand_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notification_preferences: {
         Row: {
           created_at: string

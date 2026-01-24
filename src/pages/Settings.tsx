@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useNotificationPreferences } from "@/hooks/useNotificationPreferences";
 import { Navigate } from "react-router-dom";
@@ -21,9 +22,13 @@ import {
   Settings as SettingsIcon,
   Save,
   Loader2,
+  History,
+  Users,
+  ChevronRight,
 } from "lucide-react";
 
 export default function Settings() {
+  const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const { preferences, loading: prefsLoading, saving, updatePreferences } = useNotificationPreferences();
 
@@ -264,6 +269,48 @@ export default function Settings() {
                   )}
                 </div>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Quick Links */}
+          <Card className="bg-card/50 backdrop-blur border-border/50">
+            <CardHeader>
+              <CardTitle className="text-lg">Quick Links</CardTitle>
+              <CardDescription>Access related features</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Button
+                variant="ghost"
+                className="w-full justify-between"
+                onClick={() => navigate("/notification-history")}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <History className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-medium">Notification History</p>
+                    <p className="text-sm text-muted-foreground">View past email notifications</p>
+                  </div>
+                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+              </Button>
+              <Button
+                variant="ghost"
+                className="w-full justify-between"
+                onClick={() => navigate("/competitor-analysis")}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Users className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-medium">Competitor Analysis</p>
+                    <p className="text-sm text-muted-foreground">Compare against competitors</p>
+                  </div>
+                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+              </Button>
             </CardContent>
           </Card>
 
