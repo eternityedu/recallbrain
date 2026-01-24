@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 import { useAnalytics } from "./useAnalytics";
+import { checkAndNotify } from "./useScoreNotifications";
 import { toast } from "sonner";
+
 export interface BrandProfile {
   id: string;
   user_id: string;
@@ -129,6 +131,9 @@ export function useBrandProfiles() {
   };
 
   const optimizeBrand = async (brand: BrandProfile) => {
+    // Store the previous score for notification comparison
+    const previousScore = brand.recall_score || null;
+    
     const response = await supabase.functions.invoke('optimize-brand', {
       body: {
         brandData: {
@@ -177,6 +182,32 @@ export function useBrandProfiles() {
         consistency_score: optimization.detailedScores.consistency,
         explainability_score: optimization.detailedScores.explainability,
       });
+
+      // Check for email notifications based on user preferences
+      try {
+        const { data: prefs } = await supabase
+          .from('notification_preferences')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (prefs && prefs.email_notifications_enabled && prefs.notification_email) {
+          await checkAndNotify(
+            updated as BrandProfile,
+            prefs.notification_email,
+            previousScore,
+            {
+              notifyOnThreshold: prefs.notify_on_threshold,
+              notifyOnImprovement: prefs.notify_on_improvement,
+              thresholdValue: prefs.threshold_value,
+              improvementThreshold: prefs.improvement_threshold,
+            }
+          );
+        }
+      } catch (notifError) {
+        // Don't fail the optimization if notification fails
+        console.error('Failed to send notification:', notifError);
+      }
     }
 
     // Track optimization analytics

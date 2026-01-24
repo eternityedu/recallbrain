@@ -14,6 +14,7 @@ import Chat from "./pages/Chat";
 import Analytics from "./pages/Analytics";
 import RecallScore from "./pages/RecallScore";
 import BrandComparison from "./pages/BrandComparison";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/recall-score" element={<RecallScore />} />
             <Route path="/brand-comparison" element={<BrandComparison />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

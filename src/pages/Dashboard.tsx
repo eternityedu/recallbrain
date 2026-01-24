@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Brain, LogOut, Plus, Sparkles, TrendingUp, MessageSquare, Settings, Trash2, Eye, Zap, BarChart3, GitCompare } from "lucide-react";
+import { Brain, LogOut, Plus, Sparkles, TrendingUp, MessageSquare, Settings, Trash2, Eye, Zap, BarChart3, GitCompare, Bell } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
@@ -86,6 +86,9 @@ export default function Dashboard() {
             </Button>
             <Button variant="ghost" size="sm" onClick={() => navigate("/chat")}>
               <MessageSquare className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => navigate("/settings")}>
+              <Bell className="h-4 w-4" />
             </Button>
             <Button variant="ghost" size="sm" onClick={handleSignOut}>
               <LogOut className="h-4 w-4" />

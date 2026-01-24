@@ -204,6 +204,45 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_preferences: {
+        Row: {
+          created_at: string
+          email_notifications_enabled: boolean
+          id: string
+          improvement_threshold: number
+          notification_email: string | null
+          notify_on_improvement: boolean
+          notify_on_threshold: boolean
+          threshold_value: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_notifications_enabled?: boolean
+          id?: string
+          improvement_threshold?: number
+          notification_email?: string | null
+          notify_on_improvement?: boolean
+          notify_on_threshold?: boolean
+          threshold_value?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_notifications_enabled?: boolean
+          id?: string
+          improvement_threshold?: number
+          notification_email?: string | null
+          notify_on_improvement?: boolean
+          notify_on_threshold?: boolean
+          threshold_value?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       pricing: {
         Row: {
           created_at: string
