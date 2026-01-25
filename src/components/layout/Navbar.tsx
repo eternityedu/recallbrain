@@ -1,8 +1,9 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Brain, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import logo from "@/assets/logo.png";
 
 export function Navbar() {
   const location = useLocation();
@@ -21,18 +22,15 @@ export function Navbar() {
     <motion.nav
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="fixed top-0 left-0 right-0 z-50 border-b border-glass-border bg-background/80 backdrop-blur-xl"
+      transition={{ duration: 0.4 }}
+      className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm"
     >
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="relative">
-              <Brain className="h-8 w-8 text-primary transition-transform group-hover:scale-110" />
-              <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-            </div>
-            <span className="font-display text-xl font-bold glow-text">Recall</span>
+          <Link to="/" className="flex items-center gap-2">
+            <img src={logo} alt="Recall" className="h-8 w-8" />
+            <span className="text-xl font-semibold text-foreground">Recall</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -41,7 +39,11 @@ export function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
-                className={`nav-link text-sm font-medium ${isActive(link.href) ? 'active' : ''}`}
+                className={`text-sm font-medium transition-colors ${
+                  isActive(link.href) 
+                    ? 'text-primary' 
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
               >
                 {link.label}
               </a>
@@ -53,12 +55,10 @@ export function Navbar() {
             <Button 
               variant="ghost" 
               onClick={() => navigate('/auth')}
-              className="text-muted-foreground hover:text-foreground"
             >
               Sign In
             </Button>
             <Button 
-              variant="glow" 
               onClick={() => navigate('/auth?mode=signup')}
             >
               Get Started
@@ -81,7 +81,7 @@ export function Navbar() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="md:hidden border-t border-glass-border bg-background/95 backdrop-blur-xl"
+          className="md:hidden border-t border-border bg-background"
         >
           <div className="container mx-auto px-4 py-4 space-y-4">
             {navLinks.map((link) => (
@@ -94,16 +94,15 @@ export function Navbar() {
                 {link.label}
               </a>
             ))}
-            <div className="flex flex-col gap-2 pt-4 border-t border-glass-border">
+            <div className="flex flex-col gap-2 pt-4 border-t border-border">
               <Button 
-                variant="glowOutline" 
+                variant="outline" 
                 onClick={() => { navigate('/auth'); setMobileMenuOpen(false); }}
                 className="w-full"
               >
                 Sign In
               </Button>
               <Button 
-                variant="glow" 
                 onClick={() => { navigate('/auth?mode=signup'); setMobileMenuOpen(false); }}
                 className="w-full"
               >

@@ -275,7 +275,6 @@ const Analytics = () => {
                     <CardTitle className="text-lg md:text-xl">AI-Powered Insights</CardTitle>
                   </div>
                   <Button 
-                    variant="glow" 
                     size="sm" 
                     onClick={generateInsights}
                     disabled={loadingInsights}

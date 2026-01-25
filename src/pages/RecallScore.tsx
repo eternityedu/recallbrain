@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Brain, ArrowLeft, Target, Lightbulb, Shield, RefreshCw, MessageSquare, TrendingUp, Info, History } from "lucide-react";
+import { ArrowLeft, Target, Lightbulb, Shield, RefreshCw, MessageSquare, TrendingUp, Info, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useBrandProfiles } from "@/hooks/useBrandProfiles";
 import { useScoreHistory } from "@/hooks/useScoreHistory";
 import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ScoreHistoryChart } from "@/components/charts/ScoreHistoryChart";
+import logo from "@/assets/logo.png";
 
 interface ScoreComponent {
   name: string;
@@ -23,7 +24,7 @@ const scoreComponents: ScoreComponent[] = [
     name: "Semantic Clarity",
     key: "semanticClarity",
     icon: Lightbulb,
-    color: "from-yellow-500 to-amber-500",
+    color: "bg-amber-500",
     description: "How clearly defined is your brand? AI systems need unambiguous, precise definitions to recommend accurately.",
     tips: [
       "Use specific, concrete language in descriptions",
@@ -35,7 +36,7 @@ const scoreComponents: ScoreComponent[] = [
     name: "Intent Alignment",
     key: "intentAlignment",
     icon: Target,
-    color: "from-blue-500 to-cyan-500",
+    color: "bg-blue-500",
     description: "Does your brand match user queries? Strong alignment means AI will recommend you for the right searches.",
     tips: [
       "Identify specific user problems you solve",
@@ -47,7 +48,7 @@ const scoreComponents: ScoreComponent[] = [
     name: "Authority Signals",
     key: "authoritySignals",
     icon: Shield,
-    color: "from-green-500 to-emerald-500",
+    color: "bg-emerald-500",
     description: "Are trust indicators present? Reviews, awards, user counts, and credentials help AI validate recommendations.",
     tips: [
       "Highlight customer testimonials and case studies",
@@ -59,7 +60,7 @@ const scoreComponents: ScoreComponent[] = [
     name: "Consistency",
     key: "consistency",
     icon: RefreshCw,
-    color: "from-purple-500 to-violet-500",
+    color: "bg-purple-500",
     description: "Is your messaging unified? Consistent brand information across all touchpoints improves AI understanding.",
     tips: [
       "Ensure website, social, and docs use same messaging",
@@ -71,7 +72,7 @@ const scoreComponents: ScoreComponent[] = [
     name: "Explainability",
     key: "explainability",
     icon: MessageSquare,
-    color: "from-pink-500 to-rose-500",
+    color: "bg-pink-500",
     description: "Can AI easily explain why to recommend you? Clear reasoning paths make recommendations more natural.",
     tips: [
       "Create clear 'because' statements for your value",
@@ -87,7 +88,6 @@ export default function RecallScore() {
   const { history, loading: historyLoading } = useScoreHistory(selectedBrand?.id);
   const [isOptimizing, setIsOptimizing] = useState(false);
 
-  // Calculate scores from selected brand or use defaults
   const getScores = () => {
     if (!selectedBrand) {
       return {
@@ -99,13 +99,12 @@ export default function RecallScore() {
       };
     }
     
-    // Map existing scores to new format (using available data)
     return {
       semanticClarity: selectedBrand.clarity_score || 0,
       intentAlignment: selectedBrand.relevance_score || 0,
       authoritySignals: selectedBrand.authority_score || 0,
-      consistency: Math.round((selectedBrand.clarity_score || 0) * 0.9), // Estimated
-      explainability: Math.round((selectedBrand.relevance_score || 0) * 0.95) // Estimated
+      consistency: Math.round((selectedBrand.clarity_score || 0) * 0.9),
+      explainability: Math.round((selectedBrand.relevance_score || 0) * 0.95)
     };
   };
 
@@ -140,15 +139,15 @@ export default function RecallScore() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-glass-border bg-background/80 backdrop-blur-xl sticky top-0 z-50">
+      <header className="border-b border-border bg-background sticky top-0 z-50">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button onClick={() => navigate("/dashboard")} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
               <ArrowLeft className="h-4 w-4" />
             </button>
             <div className="flex items-center gap-2">
-              <Brain className="h-7 w-7 text-primary" />
-              <span className="font-display text-xl font-bold glow-text">Recall</span>
+              <img src={logo} alt="Recall" className="h-7 w-7" />
+              <span className="text-xl font-semibold text-foreground">Recall</span>
             </div>
           </div>
           <span className="text-sm text-muted-foreground">Recall Score Breakdown</span>
@@ -159,20 +158,17 @@ export default function RecallScore() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 md:space-y-8">
           {/* Title Section */}
           <div className="text-center">
-            <h1 className="font-display text-2xl md:text-4xl font-bold mb-3 md:mb-4">
-              Recall <span className="glow-text">Score</span> Breakdown
+            <h1 className="text-2xl md:text-4xl font-bold mb-3 md:mb-4 text-foreground">
+              Recall <span className="text-primary">Score</span> Breakdown
             </h1>
             <p className="text-sm md:text-base text-muted-foreground max-w-xl mx-auto">
               Your AI-readiness score measures how well AI systems can understand, match, and recommend your brand.
-            </p>
-            <p className="text-xs text-muted-foreground/60 mt-2">
-              Higher scores may increase the likelihood of contextually correct AI recommendations.
             </p>
           </div>
 
           {/* Brand Selector */}
           {brands.length > 0 && (
-            <div className="glass-card p-4">
+            <div className="bg-card border border-border rounded-lg p-4">
               <p className="text-sm text-muted-foreground mb-3">Select a brand to view scores:</p>
               <div className="flex gap-2 flex-wrap">
                 {brands.map((brand) => (
@@ -182,7 +178,7 @@ export default function RecallScore() {
                     className={`px-4 py-2 rounded-lg border transition-all text-sm ${
                       selectedBrand?.id === brand.id
                         ? 'border-primary bg-primary/10 text-foreground'
-                        : 'border-glass-border bg-glass-bg/50 text-muted-foreground hover:text-foreground'
+                        : 'border-border bg-secondary text-muted-foreground hover:text-foreground'
                     }`}
                   >
                     {brand.brand_name}
@@ -194,13 +190,13 @@ export default function RecallScore() {
 
           {/* No Brand Selected */}
           {!selectedBrand && (
-            <div className="glass-card p-8 text-center">
-              <Brain className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="font-display text-lg font-semibold mb-2">No Brand Selected</h3>
+            <div className="bg-card border border-border rounded-lg p-8 text-center">
+              <img src={logo} alt="Recall" className="h-12 w-12 mx-auto mb-4 opacity-50" />
+              <h3 className="text-lg font-semibold mb-2 text-foreground">No Brand Selected</h3>
               <p className="text-sm text-muted-foreground mb-4">
                 Select a brand above to view its Recall Score breakdown, or create a new brand profile.
               </p>
-              <Button variant="glow" onClick={() => navigate("/brand-setup")}>
+              <Button onClick={() => navigate("/brand-setup")}>
                 Create Brand Profile
               </Button>
             </div>
@@ -209,13 +205,13 @@ export default function RecallScore() {
           {/* Overall Score */}
           {selectedBrand && (
             <>
-              <div className="glass-card p-6 glow-border">
+              <div className="bg-card border border-border rounded-lg p-6">
                 <div className="flex flex-col md:flex-row items-center gap-6">
                   {/* Score Circle */}
                   <div className="relative">
-                    <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-primary/20 to-purple-500/20 flex items-center justify-center border-4 border-primary/30">
+                    <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-primary/10 flex items-center justify-center border-4 border-primary/30">
                       <div className="text-center">
-                        <span className="text-4xl md:text-5xl font-bold glow-text">{overallScore}</span>
+                        <span className="text-4xl md:text-5xl font-bold text-primary">{overallScore}</span>
                         <p className="text-xs text-muted-foreground">/ 100</p>
                       </div>
                     </div>
@@ -226,7 +222,7 @@ export default function RecallScore() {
 
                   {/* Score Info */}
                   <div className="flex-1 text-center md:text-left">
-                    <h2 className="font-display text-xl md:text-2xl font-bold mb-2">
+                    <h2 className="text-xl md:text-2xl font-bold mb-2 text-foreground">
                       {selectedBrand.brand_name}
                     </h2>
                     <p className="text-sm text-muted-foreground mb-4">
@@ -235,7 +231,6 @@ export default function RecallScore() {
                         : "This brand hasn't been optimized yet. Run optimization to improve scores."}
                     </p>
                     <Button 
-                      variant="glow" 
                       onClick={handleOptimize}
                       disabled={isOptimizing}
                       className="w-full md:w-auto"
@@ -266,16 +261,16 @@ export default function RecallScore() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="glass-card p-4 md:p-6"
+                      className="bg-card border border-border rounded-lg p-4 md:p-6"
                     >
                       <div className="flex flex-col md:flex-row md:items-start gap-4">
                         {/* Icon & Name */}
                         <div className="flex items-center gap-3 md:w-48 flex-shrink-0">
-                          <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br ${component.color} flex items-center justify-center`}>
+                          <div className={`w-10 h-10 md:w-12 md:h-12 rounded-lg ${component.color} flex items-center justify-center`}>
                             <Icon className="h-5 w-5 md:h-6 md:w-6 text-white" />
                           </div>
                           <div>
-                            <h3 className="font-display font-semibold text-sm md:text-base">{component.name}</h3>
+                            <h3 className="font-semibold text-sm md:text-base text-foreground">{component.name}</h3>
                             <span className={`text-xs ${scoreLevel.color}`}>{scoreLevel.label}</span>
                           </div>
                         </div>
@@ -287,7 +282,7 @@ export default function RecallScore() {
                             <div className="flex-1">
                               <Progress value={score} className="h-2" />
                             </div>
-                            <span className="text-lg md:text-xl font-bold w-12 text-right">{score}%</span>
+                            <span className="text-lg md:text-xl font-bold w-12 text-right text-foreground">{score}%</span>
                           </div>
 
                           {/* Description */}
@@ -328,14 +323,14 @@ export default function RecallScore() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="glass-card p-6"
+                className="bg-card border border-border rounded-lg p-6"
               >
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-purple-500/20 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                     <History className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-display font-semibold">Optimization History</h3>
+                    <h3 className="font-semibold text-foreground">Optimization History</h3>
                     <p className="text-xs text-muted-foreground">Track how your scores improve over time</p>
                   </div>
                 </div>
@@ -352,29 +347,30 @@ export default function RecallScore() {
                   </p>
                 )}
               </motion.div>
+              
               {/* Tips Section */}
-              <div className="glass-card p-6">
-                <h3 className="font-display font-semibold mb-4">How to Improve Your Recall Score</h3>
+              <div className="bg-card border border-border rounded-lg p-6">
+                <h3 className="font-semibold mb-4 text-foreground">How to Improve Your Recall Score</h3>
                 <div className="grid sm:grid-cols-2 gap-4 text-sm">
-                  <div className="p-4 rounded-xl bg-muted/20 border border-glass-border">
+                  <div className="p-4 rounded-lg bg-secondary border border-border">
                     <h4 className="font-semibold text-primary mb-2">Run Optimization</h4>
                     <p className="text-muted-foreground text-xs">
                       Use the AI optimization feature to generate AI-readable definitions and recommendation contexts.
                     </p>
                   </div>
-                  <div className="p-4 rounded-xl bg-muted/20 border border-glass-border">
+                  <div className="p-4 rounded-lg bg-secondary border border-border">
                     <h4 className="font-semibold text-primary mb-2">Test with Simulator</h4>
                     <p className="text-muted-foreground text-xs">
                       Use the AI Recommendation Simulator to test how your brand performs in different query contexts.
                     </p>
                   </div>
-                  <div className="p-4 rounded-xl bg-muted/20 border border-glass-border">
+                  <div className="p-4 rounded-lg bg-secondary border border-border">
                     <h4 className="font-semibold text-primary mb-2">Add Trust Signals</h4>
                     <p className="text-muted-foreground text-xs">
                       Include reviews, awards, user counts, and other authority indicators in your brand profile.
                     </p>
                   </div>
-                  <div className="p-4 rounded-xl bg-muted/20 border border-glass-border">
+                  <div className="p-4 rounded-lg bg-secondary border border-border">
                     <h4 className="font-semibold text-primary mb-2">Refine Descriptions</h4>
                     <p className="text-muted-foreground text-xs">
                       Use clear, specific language and avoid jargon to improve semantic clarity.
