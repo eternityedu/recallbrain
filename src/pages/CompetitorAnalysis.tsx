@@ -7,7 +7,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import {
-  Brain,
   ArrowLeft,
   Plus,
   Trash2,
@@ -39,13 +38,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import logo from "@/assets/logo.png";
 
 const scoreComponents = [
-  { key: "estimated_semantic_clarity", label: "Semantic Clarity", icon: Sparkles, color: "from-purple-500 to-violet-500" },
-  { key: "estimated_intent_alignment", label: "Intent Alignment", icon: Target, color: "from-blue-500 to-cyan-500" },
-  { key: "estimated_authority", label: "Authority", icon: Shield, color: "from-emerald-500 to-green-500" },
-  { key: "estimated_consistency", label: "Consistency", icon: RefreshCw, color: "from-orange-500 to-amber-500" },
-  { key: "estimated_explainability", label: "Explainability", icon: BarChart3, color: "from-pink-500 to-rose-500" },
+  { key: "estimated_semantic_clarity", label: "Semantic Clarity", icon: Sparkles, color: "bg-purple-500" },
+  { key: "estimated_intent_alignment", label: "Intent Alignment", icon: Target, color: "bg-blue-500" },
+  { key: "estimated_authority", label: "Authority", icon: Shield, color: "bg-emerald-500" },
+  { key: "estimated_consistency", label: "Consistency", icon: RefreshCw, color: "bg-orange-500" },
+  { key: "estimated_explainability", label: "Explainability", icon: BarChart3, color: "bg-pink-500" },
 ] as const;
 
 function CompetitorCard({
@@ -70,11 +70,11 @@ function CompetitorCard({
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="glass-card p-6"
+      className="bg-card border border-border rounded-lg p-6"
     >
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="font-display font-semibold text-lg">{competitor.competitor_name}</h3>
+          <h3 className="font-semibold text-lg text-foreground">{competitor.competitor_name}</h3>
           {competitor.competitor_website && (
             <a
               href={competitor.competitor_website}
@@ -89,7 +89,7 @@ function CompetitorCard({
         </div>
         <div className="flex items-center gap-2">
           <Button
-            variant="glowOutline"
+            variant="outline"
             size="sm"
             onClick={onAnalyze}
             disabled={analyzing}
@@ -129,12 +129,12 @@ function CompetitorCard({
                     strokeDasharray={`${competitor.estimated_recall_score * 1.63} 163`}
                   />
                 </svg>
-                <span className="absolute inset-0 flex items-center justify-center font-display text-lg font-bold">
+                <span className="absolute inset-0 flex items-center justify-center font-bold text-lg">
                   {competitor.estimated_recall_score}
                 </span>
               </div>
               <div>
-                <p className="font-medium">Estimated Recall Score</p>
+                <p className="font-medium text-foreground">Estimated Recall Score</p>
                 {scoreDiff !== null && (
                   <p
                     className={`text-sm ${
@@ -165,14 +165,14 @@ function CompetitorCard({
                     <Icon className="h-3.5 w-3.5" />
                     {label}
                   </span>
-                  <span className="font-medium">{competitor[key]}%</span>
+                  <span className="font-medium text-foreground">{competitor[key]}%</span>
                 </div>
                 <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${competitor[key]}%` }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    className={`h-full rounded-full bg-gradient-to-r ${color}`}
+                    className={`h-full rounded-full ${color}`}
                   />
                 </div>
               </div>
@@ -180,7 +180,7 @@ function CompetitorCard({
           </div>
 
           {competitor.analysis_notes && (
-            <div className="mt-4 p-3 rounded-lg bg-muted/30 border border-glass-border">
+            <div className="mt-4 p-3 rounded-lg bg-secondary border border-border">
               <p className="text-sm text-muted-foreground">{competitor.analysis_notes}</p>
             </div>
           )}
@@ -253,21 +253,21 @@ export default function CompetitorAnalysis() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b border-glass-border bg-background/80 backdrop-blur-xl sticky top-0 z-50">
+      <header className="border-b border-border bg-background sticky top-0 z-50">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")}>
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div className="flex items-center gap-2">
-              <Brain className="h-7 w-7 text-primary" />
-              <span className="font-display text-xl font-bold glow-text">Competitor Analysis</span>
+              <img src={logo} alt="Recall" className="h-7 w-7" />
+              <span className="text-xl font-semibold text-foreground">Competitor Analysis</span>
             </div>
           </div>
 
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="glow">
+              <Button>
                 <Plus className="h-4 w-4" />
                 Add Competitor
               </Button>
@@ -305,7 +305,7 @@ export default function CompetitorAnalysis() {
                     onChange={(e) => setForm((f) => ({ ...f, competitor_description: e.target.value }))}
                   />
                 </div>
-                <Button type="submit" variant="glow" className="w-full">
+                <Button type="submit" className="w-full">
                   Add Competitor
                 </Button>
               </form>
@@ -339,13 +339,13 @@ export default function CompetitorAnalysis() {
               <div className="h-8 w-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
             </div>
           ) : competitors.length === 0 ? (
-            <div className="glass-card p-12 text-center">
+            <div className="bg-card border border-border rounded-lg p-12 text-center">
               <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h2 className="font-display text-xl font-semibold mb-2">No Competitors Added</h2>
+              <h2 className="text-xl font-semibold mb-2 text-foreground">No Competitors Added</h2>
               <p className="text-muted-foreground mb-6">
                 Add competitors to analyze their AI-readiness and compare against your brand.
               </p>
-              <Button variant="glow" onClick={() => setDialogOpen(true)}>
+              <Button onClick={() => setDialogOpen(true)}>
                 <Plus className="h-4 w-4" />
                 Add Your First Competitor
               </Button>

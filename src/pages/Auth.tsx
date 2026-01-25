@@ -4,9 +4,10 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Brain, ArrowLeft, Mail, Lock, User } from "lucide-react";
+import { ArrowLeft, Mail, Lock, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import logo from "@/assets/logo.png";
 
 export default function Auth() {
   const [searchParams] = useSearchParams();
@@ -39,7 +40,6 @@ export default function Auth() {
 
     try {
       if (isSignUp) {
-        // Check if this is the first user (will be admin)
         const { data: isFirst } = await supabase.rpc('is_first_user');
         
         const { data: authData, error } = await supabase.auth.signUp({
@@ -54,14 +54,12 @@ export default function Auth() {
         if (error) throw error;
         
         if (authData.user) {
-          // Create profile
           await supabase.from('profiles').insert({
             user_id: authData.user.id,
             email: email,
             full_name: name,
           });
 
-          // Create user role (admin if first user, otherwise regular user)
           await supabase.from('user_roles').insert({
             user_id: authData.user.id,
             role: isFirst ? 'admin' : 'user',
@@ -90,19 +88,11 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background effects */}
-      <div className="hero-glow" />
-      <motion.div
-        animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.3, 0.2] }}
-        transition={{ duration: 8, repeat: Infinity }}
-        className="absolute top-1/4 right-1/4 w-80 h-80 bg-primary/20 rounded-full blur-3xl"
-      />
-
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass-card w-full max-w-md p-8 relative z-10"
+        className="bg-card border border-border rounded-lg w-full max-w-md p-8"
       >
         <button
           onClick={() => navigate("/")}
@@ -113,11 +103,11 @@ export default function Auth() {
         </button>
 
         <div className="flex items-center gap-2 mb-6">
-          <Brain className="h-8 w-8 text-primary" />
-          <span className="font-display text-2xl font-bold glow-text">Recall</span>
+          <img src={logo} alt="Recall" className="h-8 w-8" />
+          <span className="text-2xl font-bold text-foreground">Recall</span>
         </div>
 
-        <h1 className="font-display text-2xl font-bold mb-2">
+        <h1 className="text-2xl font-bold mb-2 text-foreground">
           {isSignUp ? "Create your account" : "Welcome back"}
         </h1>
         <p className="text-muted-foreground mb-8">
@@ -136,7 +126,7 @@ export default function Auth() {
                   placeholder="Your name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="input-glass pl-10"
+                  className="pl-10"
                 />
               </div>
             </div>
@@ -153,7 +143,7 @@ export default function Auth() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="input-glass pl-10"
+                className="pl-10"
               />
             </div>
           </div>
@@ -170,12 +160,12 @@ export default function Auth() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="input-glass pl-10"
+                className="pl-10"
               />
             </div>
           </div>
 
-          <Button type="submit" variant="glow" className="w-full" disabled={loading}>
+          <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Please wait..." : isSignUp ? "Create Account" : "Sign In"}
           </Button>
         </form>

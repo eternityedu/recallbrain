@@ -26,20 +26,20 @@ const problems = [
 
 export function ProblemSection() {
   return (
-    <section className="py-16 md:py-24 relative overflow-hidden">
+    <section className="py-16 md:py-24 bg-secondary/50">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.4 }}
           className="text-center mb-10 md:mb-16"
         >
-          <h2 className="font-display text-2xl sm:text-3xl md:text-5xl font-bold mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-foreground">
             Traditional Ads Are <span className="text-destructive">Broken</span>
           </h2>
-          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
-            The advertising landscape has fundamentally changed. Here's why your current strategy isn't working.
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
+            The advertising landscape has fundamentally changed.
           </p>
         </motion.div>
 
@@ -50,15 +50,15 @@ export function ProblemSection() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="glass-card p-6 group hover:border-destructive/30 transition-colors"
+              transition={{ duration: 0.4, delay: index * 0.1 }}
+              className="bg-card border border-border rounded-lg p-6 hover:border-destructive/30 transition-colors"
             >
               <div className="flex items-start gap-4">
-                <div className="p-3 rounded-xl bg-destructive/10 text-destructive group-hover:bg-destructive/20 transition-colors">
-                  <problem.icon className="h-6 w-6" />
+                <div className="p-3 rounded-lg bg-destructive/10 text-destructive">
+                  <problem.icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="font-display font-semibold text-lg mb-2">{problem.title}</h3>
+                  <h3 className="font-semibold text-lg mb-2 text-foreground">{problem.title}</h3>
                   <p className="text-muted-foreground text-sm">{problem.description}</p>
                 </div>
               </div>
